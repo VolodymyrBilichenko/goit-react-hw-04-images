@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { HeaderSearchBarStye } from './SearchBarStyle.styled'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { getAllImages } from 'API/ImagesApi';
 
 export const SearchBar = () => {
     const [searchQuery, setSearchQuery] = useState('');
+    const [images, setImages] = useState([]);
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
@@ -18,6 +20,21 @@ export const SearchBar = () => {
     const handleInput = (evt) => {
         setSearchQuery(evt.target.value)
     }
+
+    const handleSearch = async () => {
+        try {
+            setImages(await getAllImages(searchQuery));
+            console.log(images);
+        } catch (error) {
+            console.error('Помилка отримання зображень:', error);
+        }
+    }
+
+    useEffect(() => {
+        if (searchQuery.trim() !== '') {
+            handleSearch();
+        }
+    }, [searchQuery])
 
     return (
         <div>
@@ -37,16 +54,16 @@ export const SearchBar = () => {
             <HeaderSearchBarStye className="searchar">
             <form className="form" role="search" onSubmit={handleSubmit}>
                 <button type="submit" className="button">
-                <span className="button-label">Search</span>
+                    <span className="button-label">Search</span>
                 </button>
 
                 <input
-                className="input"
-                type="search"
-                autoComplete="off"
-                placeholder="Search images and photos"
-                onChange={handleInput}
-                value={searchQuery}
+                    className="input"
+                    type="search"
+                    autoComplete="off"
+                    placeholder="Search images"
+                    onChange={handleInput}
+                    value={searchQuery}
                 />
             </form>
             </HeaderSearchBarStye>
