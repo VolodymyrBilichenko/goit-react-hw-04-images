@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
 import { HeaderSearchBarStye } from './SearchBarStyle.styled'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { getAllImages } from 'API/ImagesApi';
 
-export const SearchBar = () => {
-    const [searchQuery, setSearchQuery] = useState('');
-    const [images, setImages] = useState([]);
+export const SearchBar = ({searchQuery, setSearchQuery}) => {
+
+    const handleInput = (evt) => {
+        setSearchQuery(evt.currentTarget.value)
+    }
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
@@ -15,26 +15,12 @@ export const SearchBar = () => {
             toast.info('Please fill in the input field')
             return;
         }
+        onFormReset();
     }
 
-    const handleInput = (evt) => {
-        setSearchQuery(evt.target.value)
-    }
-
-    const handleSearch = async () => {
-        try {
-            setImages(await getAllImages(searchQuery));
-            console.log(images);
-        } catch (error) {
-            console.error('Помилка отримання зображень:', error);
-        }
-    }
-
-    useEffect(() => {
-        if (searchQuery.trim() !== '') {
-            handleSearch();
-        }
-    }, [searchQuery])
+    const onFormReset = () => {
+        setSearchQuery('')
+    };
 
     return (
         <div>
