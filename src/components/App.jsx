@@ -7,12 +7,13 @@ import { getAllImages } from "API/ImagesApi";
 export const App = () => {
   const [images, setImages] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [perPage, setPerPage] = useState(12);
 
   const handleSearch = async () => {
     try {
-        setImages(await getAllImages(searchQuery));
+      setImages(await getAllImages(searchQuery, perPage));
     } catch (error) {
-        console.error('Помилка отримання зображень:', error);
+      console.error('Помилка отримання зображень:', error);
     }
   }
 
@@ -20,13 +21,17 @@ export const App = () => {
     if (searchQuery.trim() !== '') {
       handleSearch();
     }
-  }, [searchQuery])
+  }, [searchQuery, perPage])
 
   return (
     <>
       <GlobalStyle />
 
-      <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
+      <SearchBar 
+        searchQuery={searchQuery} 
+        setSearchQuery={setSearchQuery}
+        onSearch={handleSearch}
+      />
 
       <ImageGallery imagesLi={images}/>
 

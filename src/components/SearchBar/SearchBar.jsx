@@ -2,11 +2,17 @@ import { HeaderSearchBarStye } from './SearchBarStyle.styled'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export const SearchBar = ({searchQuery, setSearchQuery}) => {
+export const SearchBar = ({searchQuery, setSearchQuery, onSearch}) => {
 
     const handleInput = (evt) => {
         setSearchQuery(evt.currentTarget.value)
     }
+
+    // const handleSearch = (evt) => {
+    //     evt.preventDefault();
+    //     onSearch(searchQuery)
+    //     onFormReset();
+    // }
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
@@ -15,6 +21,7 @@ export const SearchBar = ({searchQuery, setSearchQuery}) => {
             toast.info('Please fill in the input field')
             return;
         }
+        onSearch(searchQuery)
         onFormReset();
     }
 
